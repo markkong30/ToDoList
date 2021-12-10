@@ -11,7 +11,7 @@
   </head>
   <body>
     <div class="container-fluid">
-      <div class="position-absolute" id="background">
+      <div class="position-fixed" id="background">
       </div>
       <div class="row justify-content-center">
         <div class="col-12 col-md-8">
@@ -21,12 +21,12 @@
           </div>
         </div>
 
-        <form class="col-12 col-md-8">
-          <input id="addtask" type="text" placeholder="New Task" required />
+        <form class="col-8 d-flex justify-content-center py-5" id="addtask">
+          <input id="newTaskInput" type="text" placeholder="New Task" required />
           <button class="btn btn-sm btn-info">Create</button>
         </form>
-
       </div>
+     
     </div>
   </body>
 </html>
