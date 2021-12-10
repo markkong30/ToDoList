@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
   var displayList = function () {
     $.ajax({
       type: 'GET',
@@ -17,6 +16,43 @@ $(document).ready(function () {
     });
   }
 
+  var displayListComplete = function () {
+    $.ajax({
+      type: 'GET',
+      url: 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=216',
+      dataType: 'json',
+      success: function (response, textStatus) {
+        $('#list').empty();
+        response.tasks.forEach(function (task) {
+          if (task.completed) {
+            $('#list').append('<div class="row justify-content-center"><p class="col-8">' + task.content + '</p><button class="btn btn-sm btn-danger delete" data-id="' + task.id + '">Delete</button><input type="checkbox" class="marking" data-id="' + task.id + '"' + (task.completed ? 'checked' : '') + '/ ></div>');
+          }
+        });
+      },
+      error: function (request, textStatus, errorMessage) {
+        console.log(errorMessage);
+      }
+    });
+  }
+
+  var displayListActive = function () {
+    $.ajax({
+      type: 'GET',
+      url: 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=216',
+      dataType: 'json',
+      success: function (response, textStatus) {
+        $('#list').empty();
+        response.tasks.forEach(function (task) {
+          if (!task.completed) {
+            $('#list').append('<div class="row justify-content-center"><p class="col-8">' + task.content + '</p><button class="btn btn-sm btn-danger delete" data-id="' + task.id + '">Delete</button><input type="checkbox" class="marking" data-id="' + task.id + '"' + (task.completed ? 'checked' : '') + '/ ></div>');
+          }
+        });
+      },
+      error: function (request, textStatus, errorMessage) {
+        console.log(errorMessage);
+      }
+    });
+  }
   var addList = function () {
     $.ajax({
       type: 'POST',
@@ -30,7 +66,7 @@ $(document).ready(function () {
       }),
 
       success: function (response, textStatus) {
-        $('#newTaskInput').trigger('reset');
+        $('#newTaskInput').val('');
         displayList();
       },
       error: function (request, textStatus, errorMessage) {
@@ -71,7 +107,7 @@ $(document).ready(function () {
       dataType: 'json',
 
       success: function (response, textStatus) {
-        displayList();
+        displayList(); 
       },
       error: function (request, textStatus, errorMessage) {
         console.log(errorMessage);
@@ -99,10 +135,21 @@ $(document).ready(function () {
       checkComplete($(this).data('id'));
     } else {
       checkActive($(this).data('id'));
-    }  
+    }
+  });
+
+  $('#toggleAll').on('click', function (event) {
+    displayList();
+  });
+
+  $('#toggleComplete').on('click', function (event) {
+    displayListComplete();
+  });
+
+  $('#toggleActive').on('click', function (event) {
+    displayListActive();
   });
 
   displayList();
-
 
 });
