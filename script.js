@@ -1,4 +1,9 @@
 $(document).ready(function () {
+
+  var all = false;
+  var complete = false;
+  var active = false;
+
   var displayList = function () {
     $.ajax({
       type: 'GET',
@@ -6,7 +11,10 @@ $(document).ready(function () {
       dataType: 'json',
       success: function (response, textStatus) {
         $('#list').empty();
-        response.tasks.forEach(function (task) {
+        var ascending = response.tasks.sort(function (a, b) {
+          return a.id - b.id;
+        });
+        ascending.forEach(function (task) {
           $('#list').append('<div class="row justify-content-center"><p class="col-8">' + task.content + '</p><button class="btn btn-sm btn-danger delete" data-id="' + task.id + '">Delete</button><input type="checkbox" class="marking" data-id="' + task.id + '"' + (task.completed ? 'checked' : '') + '/ ></div>');
         });
       },
@@ -67,6 +75,9 @@ $(document).ready(function () {
 
       success: function (response, textStatus) {
         $('#newTaskInput').val('');
+        all = true;
+        complete = false;
+        active = false;
         displayList();
       },
       error: function (request, textStatus, errorMessage) {
@@ -88,7 +99,13 @@ $(document).ready(function () {
       dataType: 'json',
 
       success: function (response, textStatus) {
-        displayList();
+        if (complete == true) {
+          displayListComplete();
+        } else if (active == true) {
+          displayListActive();
+        } else {
+          displayList();
+        }
       },
       error: function (request, textStatus, errorMessage) {
         console.log(errorMessage);
@@ -107,7 +124,13 @@ $(document).ready(function () {
       dataType: 'json',
 
       success: function (response, textStatus) {
-        displayList(); 
+        if (complete == true) {
+          displayListComplete();
+        } else if (active == true) {
+          displayListActive();
+        } else {
+          displayList();
+        }
       },
       error: function (request, textStatus, errorMessage) {
         console.log(errorMessage);
@@ -122,7 +145,13 @@ $(document).ready(function () {
       dataType: 'json',
 
       success: function (response, textStatus) {
-        displayList();
+        if (complete == true) {
+          displayListComplete();
+        } else if (active == true) {
+          displayListActive();
+        } else {
+          displayList();
+        }
       },
       error: function (request, textStatus, errorMessage) {
         console.log(errorMessage);
@@ -139,14 +168,23 @@ $(document).ready(function () {
   });
 
   $('#toggleAll').on('click', function (event) {
+    all = true;
+    complete = false;
+    active = false;
     displayList();
   });
 
   $('#toggleComplete').on('click', function (event) {
+    complete = true;
+    all = false;
+    active = false;
     displayListComplete();
   });
 
   $('#toggleActive').on('click', function (event) {
+    active = true;
+    all = false;
+    complete = false;
     displayListActive();
   });
 
